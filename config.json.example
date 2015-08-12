@@ -1,0 +1,7 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": 9009
+  },
+  "workspaces": []
+}
