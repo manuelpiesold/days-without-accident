@@ -38,6 +38,18 @@ http.listen({
 
 io.on('connection', function(socket) {
   var timestamp;
+
+  // run initial
+  for (var i = 0; i < config.workspaces.length; i++) {
+    childProcess.exec(cmd + ' ' + config.workspaces[i], function(error, stdout, stderr) {
+      timestamp = stdout.replace('\n', '');
+      if (timestamp > maxTimestamp) {
+        maxTimestamp = timestamp;
+        socket.emit('new-accident-found', { timestamp: maxTimestamp, workspace: config.workspaces[i] });
+      }
+    });
+  }
+
   setInterval(function() {
     for (var i = 0; i < config.workspaces.length; i++) {
       childProcess.exec(cmd + ' ' + config.workspaces[i], function(error, stdout, stderr) {
@@ -48,7 +60,7 @@ io.on('connection', function(socket) {
         }
       });
     }
-  }, 5000);
+  }, 1000 * 60);
 
   socket.emit('new-accident-found', { timestamp: maxTimestamp });
 });
