@@ -10,7 +10,7 @@
     <body>
 
 
-        <div><p id="timediff"></p></div>
+        <div id="timediff"><p></p></div>
 
         <script src="/socket.io/socket.io.js"></script>
         <script src="/public/js/jquery-1.11.1.min.js"></script>
@@ -20,7 +20,7 @@
             io().on('new-accident-found', function( data ) {
                 var date = new moment( new Date(data.timestamp*1000) );
 
-                $('#timediff').text( date.fromNow(true) );
+                $('#timediff p').text( date.fromNow(true) + 'without accident' );
             });
         </script>
 
