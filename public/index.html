@@ -12,7 +12,7 @@
       <div class="holder">
         <img src="/public/img/mobile-logo.png" alt="" style="" />
         <div class="row cards">
-          <div class="col-xs-6 card">
+          <div class="col-xs-12 card">
             <section class="bubble" style="background-color: #86c0e3;">
               <header>
                 <ul>
@@ -26,7 +26,7 @@
               </header>
             </section>
           </div>
-          <div class="col-xs-6 card">
+          <!-- <div class="col-xs-6 card">
             <section class="bubble" style="background-color: #7ab885;">
               <header>
                 <ul>
@@ -39,20 +39,41 @@
                 </ul>
               </header>
             </section>
-          </div>
+          </div> -->
         </div>
-        <div id="timediff"><p></p></div>
       </div>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/public/js/jquery-1.11.1.min.js"></script>
         <script src="/public/js/moment.min.js"></script>
 
         <script>
-            io().on('new-accident-found', function( data ) {
-                var date = new moment( new Date(data.timestamp*1000) );
-
-                $('#Accident').text( date.fromNow(true) );
+            var socket = io(),
+                lastAccidentInterval = undefined;
+            // var clock = $('#flipclock').FlipClock({
+            //         // ... your options here
+            //     });
+            socket.on('new-accident-found', function( data ) {
+                newAccident( new Date(data.timestamp*1000) );
             });
+            // $('trigger-custom-accident').on('click', function () {
+            //     socket.emit( 'trigger-custom-accident' );
+            // });
+            function newAccident( date ) {
+                if ( lastAccidentInterval ) {
+                    clearInterval( lastAccidentInterval );
+                }
+                lastAccidentInterval = setInterval( function() {
+                    dateNow = new Date();
+                    seconds = Math.floor((dateNow - (date))/1000);
+                    minutes = Math.floor(seconds/60);
+                    hours = Math.floor(minutes/60);
+                    days = Math.floor(hours/24);
+                    hours = hours-(days*24);
+                    minutes = minutes-(days*24*60)-(hours*60);
+                    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+                    $('#Accident').text( days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds ' );
+                }, 500 );
+            }
         </script>
 
     </body>
