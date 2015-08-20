@@ -4,63 +4,55 @@
 
         <title>days-without-accident</title>
         <link rel="stylesheet/less" type="text/css" href="/public/less/index.less" />
-        <!-- <link rel="stylesheet/less" type="text/css" href="/public/css/flipclock.css" /> -->
         <script src="/public/js/less.min.js"></script>
-        <!-- <script src="/public/js/flipclock.min.js"></script> -->
-
+        <style type="text/css">
+        </style>
     </head>
     <body>
-
-
+      <div class="holder">
+        <img src="/public/img/mobile-logo.png" alt="" style="" />
+        <div class="row cards">
+          <div class="col-xs-6 card">
+            <section class="bubble" style="background-color: #86c0e3;">
+              <header>
+                <ul>
+                  <li>
+                    Days without accident
+                  </li>
+                  <li class="big-num">
+                    <h4 id="Accident">365</h4>
+                  </li>
+                </ul>
+              </header>
+            </section>
+          </div>
+          <div class="col-xs-6 card">
+            <section class="bubble" style="background-color: #7ab885;">
+              <header>
+                <ul>
+                  <li>
+                    Enes Strikes
+                  </li>
+                  <li class="big-num">
+                    <h4>1532</h4>
+                  </li>
+                </ul>
+              </header>
+            </section>
+          </div>
+        </div>
         <div id="timediff"><p></p></div>
-
-        <!-- <div id="flipclock"></div> -->
-
-        <!-- <button id="trigger-custom-accident">DAMN!!</button> -->
-
+      </div>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/public/js/jquery-1.11.1.min.js"></script>
         <script src="/public/js/moment.min.js"></script>
 
         <script>
-            var socket = io(),
-                lastAccidentInterval = undefined;
-            // var clock = $('#flipclock').FlipClock({
-            //         // ... your options here
-            //     });
+            io().on('new-accident-found', function( data ) {
+                var date = new moment( new Date(data.timestamp*1000) );
 
-            socket.on('new-accident-found', function( data ) {
-                newAccident( new Date(data.timestamp*1000) );
+                $('#Accident').text( date.fromNow(true) );
             });
-
-            // $('trigger-custom-accident').on('click', function () {
-            //     socket.emit( 'trigger-custom-accident' );
-            // });
-
-
-
-            function newAccident( date ) {
-
-                if ( lastAccidentInterval ) {
-                    clearInterval( lastAccidentInterval );
-                }
-
-                lastAccidentInterval = setInterval( function() {
-                    dateNow = new Date();
-
-                    seconds = Math.floor((dateNow - (date))/1000);
-                    minutes = Math.floor(seconds/60);
-                    hours = Math.floor(minutes/60);
-                    days = Math.floor(hours/24);
-
-                    hours = hours-(days*24);
-                    minutes = minutes-(days*24*60)-(hours*60);
-                    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
-
-                    $('#timediff p').text( days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds ' );
-                }, 500 );
-            }
-
         </script>
 
     </body>
