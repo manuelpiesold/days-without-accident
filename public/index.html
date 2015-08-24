@@ -53,6 +53,11 @@
             //         // ... your options here
             //     });
             socket.on('new-accident-found', function( data ) {
+                var tmpTimeStamps = [];
+                if ( data.timestamp.indexOf( ' ' ) ) {
+                    tmpTimeStamps = data.timestamp.split( ' ' );
+                    data.timestamp = tmpTimeStamps[ tmpTimeStamps.length - 1 ];
+                }
                 newAccident( new Date(data.timestamp*1000) );
             });
             // $('trigger-custom-accident').on('click', function () {
